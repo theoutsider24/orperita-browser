@@ -1,0 +1,44 @@
+{% load leaflet_tags %}
+{% load static %}
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="{% static 'css/leaflet.measure.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <script type="text/javascript" src="{% static 'js/leaflet-src.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-3.5.0.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/proj4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/proj4js.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/proj4leaflet.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/leaflet.measure.js' %}"></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body,
+        #main {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map">
+        <div id="main"></div>
+        <script type="text/javascript">var land_url = "{% url "land_data" %}";</script>
+        <script type="text/javascript">var river_url = "{% url "river_data" %}";</script>
+        <script type="text/javascript">var lake_url = "{% url "lake_data" %}";</script>
+        <script type="text/javascript">var forest_url = "{% url "forest_data" %}";</script>
+        <script type="text/javascript">var province_url = "{% url "province_data" %}";</script>
+        <script type="text/javascript">var poi_url = "{% url "poi_data" %}";</script>
+        <script type="text/javascript">var background_image_url = "{% static 'img/background.png' %}";</script>
+        <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
