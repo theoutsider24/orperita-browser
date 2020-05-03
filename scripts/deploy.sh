@@ -7,7 +7,7 @@ python manage.py migrate
 echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@myproject.com', 'admin', first_name = 'System', last_name = 'Admin')" | python manage.py shell
 # Collect static items for admin page
 python manage.py collectstatic --no-input
-
+python manage.py reload_data
 # Set permissions to allow access for apache
 chgrp -R www-data /code
 chmod -R g+w /code
