@@ -55,9 +55,10 @@ class Province(models.Model):
 
 class POI(models.Model):
     name = models.CharField(max_length=80, null=True)
-    notes = models.CharField(max_length=256, null=True)
+    notes = models.CharField(max_length=1024, null=True)
     identifier = models.IntegerField(null=True)
     mpoly = models.MultiPointField(srid=4326)
+    poi_class = models.IntegerField(null=True)
 
     def __str__(self):
         return self.name or str(self.identifier) or "null"
