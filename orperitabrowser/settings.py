@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-MAP_DATA_ROOT = os.path.join(BASE_DIR, "data")
+MAP_DATA_ROOT = os.path.join(BASE_DIR, "browser", "data")
 
 LEAFLET_CONFIG = {
     # 'SPATIAL_EXTENT': (-121.9704509861233248, 37.3441430656434861, -121.9132855622595031, 37.3725788700443502)
