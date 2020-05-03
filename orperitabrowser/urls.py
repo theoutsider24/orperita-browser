@@ -32,7 +32,7 @@ urlpatterns = [
     url(r'^data.geojson/lake$', GeoJSONLayerView.as_view(geometry_field='mpoly',
                                                          model=Lake, srid=4326), name='lake_data'),
     url(r'^data.geojson/poi$', GeoJSONLayerView.as_view(geometry_field='mpoly',
-                                                        model=POI, srid=4326), name='poi_data'),
+                                                        model=POI, properties=('name', 'notes', 'id', 'poi_class'), srid=4326), name='poi_data'),
     url(r'^data.geojson/forest$', GeoJSONLayerView.as_view(geometry_field='mpoly',
                                                            model=Forest, srid=4326), name='forest_data'),
     url(r'^data.geojson/province$', GeoJSONLayerView.as_view(geometry_field='mpoly',
