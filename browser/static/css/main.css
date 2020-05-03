@@ -1,0 +1,44 @@
+.leaflet-popup-content-wrapper {
+    background: rgba(255, 245, 238, 0.8);
+}
+
+.poi-label {
+    opacity: 0.9;
+    transform: translate3d(370px, 363px, 0px);
+    background: transparent;
+    color: black;
+    border: none;
+    padding: 3px;
+    text-shadow: 0 0 0.2em #ffffff;
+    box-shadow: none;
+    display: none;
+}
+
+.poi-label:before {
+    border-right-color: transparent;
+}
+
+.poi-label-1 {
+    font-size: 17pt;
+    line-height: 17pt;
+}
+
+.poi-label-2 {
+    font-size: 15pt;
+    line-height: 15pt;
+}
+
+.poi-label-3 {
+    font-size: 13pt;
+    line-height: 13pt;
+}
+
+.poi-label-4 {
+    font-size: 12pt;
+    line-height: 12pt;
+}
+
+.poi-label-5 {
+    font-size: 10pt;
+    line-height: 10pt;
+}
