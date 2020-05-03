@@ -1,14 +1,6 @@
 (function() {
 
     function loadmap() {
-        // // var djoptions = { "srid": 4326, "extent": [[-1.0495615, -2.2863302], [9.03104332, 2.418345]], "fitextent": true, "center": null, "zoom": null, "minzoom": null, "maxzoom": null, "layers": [["OSM", "//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", "\u00a9 <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"]], "overlays": [], "attributionprefix": null, "scale": "metric", "minimap": false, "resetview": true, "tilesextent": [] },
-        // var djoptions = { "srid": 4326, "extent": L.latLngBounds(L.latLng(1.0495615, 2.2863302), L.latLng(9.03104332, 2.418345)), "tilesextent": [], "fitextent": true, "center": L.latLng(1.1, 1.1), "zoom": 6, "minzoom": null, "maxzoom": null }
-        // options = {
-        //     djoptions: djoptions, initfunc: loadmap,
-        //     globals: false, callback: main_map_init
-        // },
-        //     map = L.Map.djangoMap('main', options);
-        //BOX(-160.063042290642 - 84.867632396492, 160.06333134676 74.3728722483466)
         var mymap = L.map('main', {
             crs: L.CRS.EPSG4326,
             minZoom: 2,
@@ -69,7 +61,7 @@ function loadGeoJsonLayerWithPopup(url, map, style) {
                 layer.bindTooltip(feature.properties.name, { 'permanent': true, 'className': 'poi-label poi-label-' + feature.properties.poi_class, 'offset': [10, 0], 'direction': 'right' });
             },
             pointToLayer: function(feature, latlng) {
-                return L.circleMarker(latlng, Object.assign(geojsonMarkerOptions, { radius: radii[feature.properties.poi_class || 5] }));
+                return L.circleMarker(latlng, Object.assign(geojsonMarkerOptions, { radius: radii[feature.properties.poi_class || 5], 'className': 'poi-marker poi-marker-' + feature.properties.poi_class }));
             },
             style: function(feature) {
                 return style;
@@ -116,10 +108,16 @@ function main_map_init(map, options) {
     map.on('zoomend', function() {
         var zoom = map.getZoom();
         appearZoomLevel = 5;
-        zoom_cls = { 4: [1], 5: [1, 2, 3], 6: [1, 2, 3, 4, 5] }
+        zoom_cls = { 3: [], 4: [1], 5: [1, 2, 3], 6: [1, 2, 3, 4, 5] }
+        max_defined_zoom_level = Math.max(...Object.keys(zoom_cls).map((str) => parseInt(str)))
+        if (zoom > max_defined_zoom_level) {
+            zoom = max_defined_zoom_level
+        }
         $('.poi-label').hide()
+        $('.poi-marker').hide()
         if (zoom in zoom_cls) {
             zoom_cls[zoom].forEach(cls => $('.poi-label-' + cls).show());
+            zoom_cls[Math.min(zoom + 1, max_defined_zoom_level)].forEach(cls => $('.poi-marker-' + cls).show());
         }
     })
 }

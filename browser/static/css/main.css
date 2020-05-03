@@ -14,6 +14,10 @@
     display: none;
 }
 
+.poi-marker {
+    display: none;
+}
+
 .poi-label:before {
     border-right-color: transparent;
 }
