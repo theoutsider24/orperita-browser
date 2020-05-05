@@ -14,6 +14,8 @@ services:
     user: root
     depends_on:
       - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=orperitabrowser.deployment-settings
     ports:
       - "80:80"
     volumes:
