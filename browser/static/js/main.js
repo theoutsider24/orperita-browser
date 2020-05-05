@@ -8,7 +8,8 @@
             maxBounds: [
                 [-86.1239755176415969, -170.7707319029396160],
                 [85.6439065232355148, 175.0264295954947045]
-            ]
+            ],
+            zoomControl: false
         }).setView([0, 0], 2);
         window.map = mymap
         main_map_init(mymap)
@@ -42,26 +43,47 @@ function loadGeoJsonLayer(url, map, style, callback = (layer) => {}) {
     });
 }
 
+feature_map = {}
+
+function zoomToFeature(name) {
+    feature = feature_map[name]
+
+
+    if (feature.toGeoJSON().geometry.type.includes("Point")) {
+        map.flyTo(feature.getBounds().getCenter(), 8)
+    } else {
+        map.flyToBounds(feature.getBounds())
+    }
+
+
+}
+
 function loadGeoJsonLayerWithPopup(url, map, style) {
     var geojsonMarkerOptions = {
-        radius: 8,
-        fillColor: "#ff7800",
+        radius: 6,
+        fillColor: "#ffffff",
         color: "#000",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8,
         className: 'poi-marker'
     };
-    radii = [8, 7, 6, 5, 4, 3]
+    radii = [5, 4, 3, 2, 2, 1]
 
     $.getJSON(url, function(data) {
         layer = L.geoJson(data, {
             onEachFeature: function(feature, layer) {
-                layer.bindPopup('<h1>' + feature.properties.name + '</h1><p>' + feature.properties.notes + '</p>');
+                layer.bindPopup('<h1>' + feature.properties.id + ": " + feature.properties.name + '</h1><p>' + feature.properties.notes + '</p>');
                 layer.bindTooltip(feature.properties.name, { 'permanent': true, 'className': 'poi-label poi-label-' + feature.properties.poi_class, 'offset': [10, 0], 'direction': 'right' });
             },
             pointToLayer: function(feature, latlng) {
-                return L.circleMarker(latlng, Object.assign(geojsonMarkerOptions, { radius: radii[feature.properties.poi_class || 5], 'className': 'poi-marker poi-marker-' + feature.properties.poi_class }));
+                color = "#ffffff"
+                if (feature.properties.name == null) {
+                    color = "#00ff00"
+                } else if (feature.properties.notes == null) {
+                    color = "#ffff00"
+                }
+                return L.circleMarker(latlng, Object.assign(geojsonMarkerOptions, { fillColor: color, radius: radii[feature.properties.poi_class || 5], 'className': 'poi-marker poi-marker-' + feature.properties.poi_class }));
             },
             style: function(feature) {
                 return style;
@@ -69,6 +91,21 @@ function loadGeoJsonLayerWithPopup(url, map, style) {
             pane: 'tilePane'
         })
         layer.addTo(map);
+        Object.entries(layer._layers).forEach((k) => feature_map[k[1].feature.properties.name] = k[1])
+        $( "#search-box" ).autocomplete({
+            source: Object.keys(feature_map),
+            select: ( event, ui ) => {zoomToFeature(ui.item.label)},
+            classes : {"ui-autocomplete": "search-result"},
+            appendTo: "#search-box-container",
+            position: {
+                my: "left top",
+                at: "left bottom",
+                of: "#search-box-container"
+            },
+            open: function( event, ui ) {$("#search-box-container").addClass("open")},
+            close: function( event, ui ) {$("#search-box-container").removeClass("open")}
+          });
+
         layers[url.substring(14)] = layer
 
         if (typeof controlLayer !== 'undefined') {
@@ -84,10 +121,10 @@ function main_map_init(map, options) {
     layers = {}
 
     loadGeoJsonLayer(river_url, map, { color: "#6498d2", weight: 1 })
-    loadGeoJsonLayer(forest_url, map, { fillColor: "#C6E8C6", stroke: false, fillOpacity: 0.5, fillOpacity: 1 })
+    loadGeoJsonLayer(forest_url, map, { fillColor: "#B6E2B6", stroke: false, fillOpacity: 0.5, fillOpacity: 1 })
     loadGeoJsonLayer(province_url, map, { color: "#503c2f", weight: 1, fill: false, dashArray: "20 20", opacity: 0.5 })
     loadGeoJsonLayer(lake_url, map, { color: "#6498d2", fillColor: "#AADAFF", weight: 1, fillOpacity: 1 })
-    loadGeoJsonLayer(land_url, map, { fillColor: "#beb297", fillOpacity: 0.4, color: "#503c2f", weight: 1 }, (layer) => layer.bringToBack())
+    loadGeoJsonLayer(land_url, map, { fillColor: "#F5F5F5", fillOpacity: 1, color: "#503c2f", weight: 0 }, (layer) => layer.bringToBack())
 
 
     loadGeoJsonLayerWithPopup(poi_url, map, {})
@@ -97,12 +134,14 @@ function main_map_init(map, options) {
         [85.6439065232355148, 175.0264295954947045]
     ];
 
-    L.imageOverlay(background_image_url, imageBounds, { pane: 'mapPane' }).addTo(map);
+    //L.imageOverlay(background_image_url, imageBounds, { pane: 'mapPane' }).addTo(map);
     L.control.scale().addTo(map);
     L.control.measure({
-        position: 'topleft'
+        position: 'bottomright'
     }).addTo(map)
-
+    L.control.zoom({
+        position: 'bottomright'
+    }).addTo(map);
 
     var lastZoom;
     map.on('zoomend', function() {
