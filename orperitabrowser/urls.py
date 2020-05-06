@@ -17,7 +17,7 @@ from django.contrib.gis import admin
 from django.urls import path
 from django.conf.urls import url
 from djgeojson.views import GeoJSONLayerView
-from browser.models import WorldBorder, River, Lake, POI, Forest, Province
+from browser.models import WorldBorder, River, Lake, POI, Forest, Province, MountainShadow
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^data.geojson/forest$', GeoJSONLayerView.as_view(geometry_field='mpoly',
                                                            model=Forest, srid=4326), name='forest_data'),
     url(r'^data.geojson/province$', GeoJSONLayerView.as_view(geometry_field='mpoly',
-                                                             model=Province, srid=4326), name='province_data')
-
+                                                             model=Province, srid=4326), name='province_data'),
+     url(r'^data.geojson/mountain_shadow$', GeoJSONLayerView.as_view(geometry_field='mpoly',
+                                                             model=MountainShadow, srid=4326), name='mountain_shadow_data')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,6 +1,6 @@
 import os
 from django.contrib.gis.utils import LayerMapping
-from .models import WorldBorder, River, Lake, POI, Forest, Province
+from .models import WorldBorder, River, Lake, POI, Forest, Province, MountainShadow
 from orperitabrowser.settings import MAP_DATA_ROOT
 
 world_mapping = {
@@ -27,6 +27,10 @@ forest_mapping = {
     'mpoly': 'MULTIPOLYGON',
 }
 
+mountain_shadow_mapping = {
+    'mpoly': 'MULTIPOLYGON',
+}
+
 
 poi_mapping = {
     'identifier': 'identifier',
@@ -39,12 +43,13 @@ poi_mapping = {
 base_dir = MAP_DATA_ROOT
 
 loader = {
-    "world": (WorldBorder,     os.path.join(base_dir, 'land_4326.shp'),      world_mapping),
-    "river": (River,           os.path.join(base_dir, 'rivers_4326.shp'),    river_mapping),
-    "lake": (Lake,             os.path.join(base_dir, 'lakes_4326.shp'),     lake_mapping),
-    "poi": (POI,               os.path.join(base_dir, 'poi_4326.shp'),       poi_mapping),
-    "forest": (Forest,         os.path.join(base_dir, 'forests_4326.shp'),   forest_mapping),
-    "province": (Province,     os.path.join(base_dir, 'provinces_4326.shp'), forest_mapping),
+    "world": (WorldBorder,                  os.path.join(base_dir, 'land_4326.shp'),      world_mapping),
+    "river": (River,                        os.path.join(base_dir, 'rivers_4326.shp'),    river_mapping),
+    "lake": (Lake,                          os.path.join(base_dir, 'lakes_4326.shp'),     lake_mapping),
+    "poi": (POI,                            os.path.join(base_dir, 'poi_4326.shp'),       poi_mapping),
+    "forest": (Forest,                      os.path.join(base_dir, 'forests_4326.shp'),   forest_mapping),
+    "province": (Province,                  os.path.join(base_dir, 'provinces_4326.shp'), forest_mapping),
+    "mountain_shadow": (MountainShadow,     os.path.join(base_dir, 'mountain_shadow.shp'), mountain_shadow_mapping),
 }
 
 

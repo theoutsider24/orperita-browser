@@ -120,8 +120,9 @@ function loadGeoJsonLayerWithPopup(url, map, style) {
 }
 
 function order_layers() {
-    if(Object.keys(layers).length === 6) {
+    if (Object.keys(layers).length === 7) {
         layers["land"].bringToFront()
+        layers["mountain_shadow"].bringToFront()
         layers["forest"].bringToFront()
         layers["lake"].bringToFront()
         layers["river"].bringToFront()
@@ -138,6 +139,7 @@ function main_map_init(map, options) {
     loadGeoJsonLayer(province_url, map, { color: "#503c2f", weight: 1, fill: false, dashArray: "20 20", opacity: 0.5 })
     loadGeoJsonLayer(lake_url, map, { color: "#6498d2", fillColor: "#AADAFF", weight: 1, fillOpacity: 1 })
     loadGeoJsonLayer(land_url, map, { fillColor: "#F5F5F5", fillOpacity: 1, color: "#503c2f", weight: 0 })
+    loadGeoJsonLayer(mountain_shadow_url, map, { fillColor: "#C5C5C5", fillOpacity: 0.4, weight: 0 })
 
 
     loadGeoJsonLayerWithPopup(poi_url, map, {})

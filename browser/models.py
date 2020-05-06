@@ -62,3 +62,6 @@ class POI(models.Model):
 
     def __str__(self):
         return self.name or str(self.identifier) or "null"
+
+class MountainShadow(models.Model):
+    mpoly = models.MultiPolygonField(srid=4326)
