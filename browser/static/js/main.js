@@ -38,8 +38,10 @@ function loadGeoJsonLayer(url, map, style, callback = (layer) => {}) {
         if (typeof controlLayer !== 'undefined') {
             controlLayer.remove()
         }
+        
         controlLayer = L.control.layers(null, layers)
         controlLayer.addTo(map);
+        order_layers()
     });
 }
 
@@ -113,9 +115,20 @@ function loadGeoJsonLayerWithPopup(url, map, style) {
         }
         controlLayer = L.control.layers(null, layers)
         controlLayer.addTo(map);
+        order_layers()
     });
 }
 
+function order_layers() {
+    if(Object.keys(layers).length === 6) {
+        layers["land"].bringToFront()
+        layers["forest"].bringToFront()
+        layers["lake"].bringToFront()
+        layers["river"].bringToFront()
+        layers["province"].bringToFront()
+        layers["poi"].bringToFront()
+    }
+}
 
 function main_map_init(map, options) {
     layers = {}
@@ -124,7 +137,7 @@ function main_map_init(map, options) {
     loadGeoJsonLayer(forest_url, map, { fillColor: "#B6E2B6", stroke: false, fillOpacity: 0.5, fillOpacity: 1 })
     loadGeoJsonLayer(province_url, map, { color: "#503c2f", weight: 1, fill: false, dashArray: "20 20", opacity: 0.5 })
     loadGeoJsonLayer(lake_url, map, { color: "#6498d2", fillColor: "#AADAFF", weight: 1, fillOpacity: 1 })
-    loadGeoJsonLayer(land_url, map, { fillColor: "#F5F5F5", fillOpacity: 1, color: "#503c2f", weight: 0 }, (layer) => layer.bringToBack())
+    loadGeoJsonLayer(land_url, map, { fillColor: "#F5F5F5", fillOpacity: 1, color: "#503c2f", weight: 0 })
 
 
     loadGeoJsonLayerWithPopup(poi_url, map, {})
@@ -135,13 +148,15 @@ function main_map_init(map, options) {
     ];
 
     //L.imageOverlay(background_image_url, imageBounds, { pane: 'mapPane' }).addTo(map);
-    L.control.scale().addTo(map);
-    L.control.measure({
+    L.control.scale({
         position: 'bottomright'
-    }).addTo(map)
+    }).addTo(map);
     L.control.zoom({
         position: 'bottomright'
     }).addTo(map);
+    L.control.measure({
+        position: 'bottomright'
+    }).addTo(map)
 
     var lastZoom;
     map.on('zoomend', function() {

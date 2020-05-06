@@ -8,6 +8,7 @@ body {
 
 .leaflet-container {
     background-color: #AADAFF;
+    font-family: Roboto, Arial, sans-serif !important;
 }
 
 .poi-label {
