@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
     function loadmap() {
         var mymap = L.map('main', {
@@ -23,10 +23,10 @@
 
 })();
 
-function loadGeoJsonLayer(url, map, style, callback = (layer) => {}) {
-    $.getJSON(url, function(data) {
+function loadGeoJsonLayer(url, map, style, callback = (layer) => { }) {
+    $.getJSON(url, function (data) {
         layer = L.geoJson(data, {
-            style: function(feature) {
+            style: function (feature) {
                 return style;
             },
             pane: 'tilePane'
@@ -35,13 +35,7 @@ function loadGeoJsonLayer(url, map, style, callback = (layer) => {}) {
         layers[url.substring(14)] = layer
         callback(layer)
 
-        if (typeof controlLayer !== 'undefined') {
-            controlLayer.remove()
-        }
-        
-        controlLayer = L.control.layers(null, layers)
-        controlLayer.addTo(map);
-        order_layers()
+        after_layer_load(map)
     });
 }
 
@@ -72,13 +66,13 @@ function loadGeoJsonLayerWithPopup(url, map, style) {
     };
     radii = [5, 4, 3, 2, 2, 1]
 
-    $.getJSON(url, function(data) {
+    $.getJSON(url, function (data) {
         layer = L.geoJson(data, {
-            onEachFeature: function(feature, layer) {
+            onEachFeature: function (feature, layer) {
                 layer.bindPopup('<h1>' + feature.properties.id + ": " + feature.properties.name + '</h1><p>' + feature.properties.notes + '</p>');
                 layer.bindTooltip(feature.properties.name, { 'permanent': true, 'className': 'poi-label poi-label-' + feature.properties.poi_class, 'offset': [10, 0], 'direction': 'right' });
             },
-            pointToLayer: function(feature, latlng) {
+            pointToLayer: function (feature, latlng) {
                 color = "#ffffff"
                 if (feature.properties.name == null) {
                     color = "#00ff00"
@@ -87,36 +81,51 @@ function loadGeoJsonLayerWithPopup(url, map, style) {
                 }
                 return L.circleMarker(latlng, Object.assign(geojsonMarkerOptions, { fillColor: color, radius: radii[feature.properties.poi_class || 5], 'className': 'poi-marker poi-marker-' + feature.properties.poi_class }));
             },
-            style: function(feature) {
+            style: function (feature) {
                 return style;
             },
             pane: 'tilePane'
         })
         layer.addTo(map);
         Object.entries(layer._layers).forEach((k) => feature_map[k[1].feature.properties.name] = k[1])
-        $( "#search-box" ).autocomplete({
+        $("#search-box").autocomplete({
             source: Object.keys(feature_map),
-            select: ( event, ui ) => {zoomToFeature(ui.item.label)},
-            classes : {"ui-autocomplete": "search-result"},
+            select: (event, ui) => { zoomToFeature(ui.item.label) },
+            classes: { "ui-autocomplete": "search-result" },
             appendTo: "#search-box-container",
             position: {
                 my: "left top",
                 at: "left bottom",
                 of: "#search-box-container"
             },
-            open: function( event, ui ) {$("#search-box-container").addClass("open")},
-            close: function( event, ui ) {$("#search-box-container").removeClass("open")}
-          });
+            open: function (event, ui) { $("#search-box-container").addClass("open") },
+            close: function (event, ui) { $("#search-box-container").removeClass("open") }
+        });
 
         layers[url.substring(14)] = layer
 
-        if (typeof controlLayer !== 'undefined') {
-            controlLayer.remove()
-        }
-        controlLayer = L.control.layers(null, layers)
-        controlLayer.addTo(map);
-        order_layers()
+        after_layer_load(map)
     });
+}
+
+function after_layer_load(map) {
+    order_layers()
+
+    $("#sidebar > ul").empty()
+    Object.keys(layers).forEach((layer) => {
+        var new_li = $("<li><button>" + layer + "</button></li>")
+        new_li.find("button").addClass("active")
+        $("#sidebar > ul").append(new_li)
+        new_li.on("click", () => {
+            new_li.find("button").toggleClass("active")
+            if (new_li.find("button").hasClass("active"))
+                map.addLayer(layers[layer])
+            else
+                map.removeLayer(layers[layer])
+            order_layers()
+        })
+    })
+
 }
 
 function order_layers() {
@@ -133,6 +142,9 @@ function order_layers() {
 
 function main_map_init(map, options) {
     layers = {}
+
+    $(".searchbox-hamburger").on("click", () => $("#sidebar").addClass("open"))
+    $("#sidebar-header-close-button").on("click", () => $("#sidebar").removeClass("open"))
 
     loadGeoJsonLayer(river_url, map, { color: "#6498d2", weight: 1 })
     loadGeoJsonLayer(forest_url, map, { fillColor: "#B6E2B6", stroke: false, fillOpacity: 0.5, fillOpacity: 1 })
@@ -161,7 +173,7 @@ function main_map_init(map, options) {
     }).addTo(map)
 
     var lastZoom;
-    map.on('zoomend', function() {
+    map.on('zoomend', function () {
         var zoom = map.getZoom();
         appearZoomLevel = 5;
         zoom_cls = { 3: [], 4: [1], 5: [1, 2, 3], 6: [1, 2, 3, 4, 5] }
@@ -176,4 +188,5 @@ function main_map_init(map, options) {
             zoom_cls[Math.min(zoom + 1, max_defined_zoom_level)].forEach(cls => $('.poi-marker-' + cls).show());
         }
     })
+
 }

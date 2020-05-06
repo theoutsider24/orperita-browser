@@ -121,7 +121,6 @@ body {
 
 .search-result>li:last-child>div {
     border-radius: 0 0 8px 8px;
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.2); */
 }
 
 .search-result>li>div.ui-state-active {
@@ -134,7 +133,152 @@ body {
 
 
 
-/* suggestion shown
+.searchbox-hamburger-container {
+    position: absolute;
+    z-index: 1003;
+    left: 0;
+    top: 0;
+}
 
-border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid #DADCE0;*/
+.searchbox-hamburger {    background: transparent;
+    border: 0;
+    border-radius: 0;
+    font: inherit;
+    list-style: none;
+    margin: 0;
+    outline: 0;
+    overflow: visible;
+    padding: 0;
+    vertical-align: baseline;
+    display: block;
+    cursor: pointer;
+    padding: 12px 16px;
+    color: inherit;
+}
+
+.searchbox-hamburger::before {
+    background-image: url(//maps.gstatic.com/tactile/omnibox/quantum_menu-v2-2x.png);
+    content: '';
+    display: block;
+    background-size: 48px 24px;
+    background-position: 0 0;
+    height: 24px;
+    width: 24px;
+    opacity: .62;
+}
+
+#sidebar {
+    position: absolute;
+    z-index: 1;
+    left: -340px;
+    width: 320px;
+    height: 100%;
+    background-color: white;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+    transition-property: -webkit-transform;
+    transition-property: transform;
+    box-shadow: 0 -1px 24px rgba(0,0,0,0.4);
+    transition-duration: 0.3s;
+    z-index: 1004;
+}
+
+#sidebar.open {
+    -webkit-transform: translateX(340px);
+    transform: translateX(340px);
+}
+
+#sidebar-header {
+    padding: 14px 22px;
+    height: 22px;
+}
+
+#sidebar-header-close-button {
+    background: no-repeat url(//maps.gstatic.com/tactile/icons/settings_hdpi-ac98c51ad910ef499dcd2e654f1ef4a7.png) 0 -125px;
+    background-size: 24px 1081px;
+    height: 24px;
+    width: 24px;
+    top: 19px;
+    position: absolute;
+    right: 24px;
+    cursor: pointer;
+    opacity: .8;
+    border: 0;
+    border-radius: 0;
+    font: inherit;
+    list-style: none;
+    margin: 0;
+    outline: 0;
+    overflow: visible;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+#sidebar > ul {
+    padding: 14px 22px;
+    border-top: 1px solid #d9d9d9;
+    color: #212121;
+    font-size: 13px;
+}
+
+#sidebar > ul > li {
+    padding: 8px 0;
+    font: inherit;
+    list-style: none;
+}
+
+#sidebar > ul > li > button {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    font: inherit;
+    list-style: none;
+    margin: 0;
+    outline: 0;
+    overflow: visible;
+    padding: 0;
+    vertical-align: baseline;
+    color: inherit;
+    width: 100%;
+    display: inline-block;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    line-height: 24px;
+    
+    padding-left: 48px;
+}
+
+#sidebar > ul > li > button.active {
+    color: #1A73E8;
+}
+
+.icon {
+    height: 24px;
+    width: 24px;
+}
+
+.poi-icon {
+    background: no-repeat url(//maps.gstatic.com/tactile/icons/settings_hdpi-ac98c51ad910ef499dcd2e654f1ef4a7.png) 0 -500px;
+    background-size: 24px 1081px;
+}
+
+.map-icon {
+    background: no-repeat url(//maps.gstatic.com/tactile/icons/settings_hdpi-ac98c51ad910ef499dcd2e654f1ef4a7.png) 0 -400px;
+    background-size: 24px 1081px;
+}
+
+.worlds-icon {
+    background: no-repeat url(//maps.gstatic.com/tactile/icons/settings_hdpi-ac98c51ad910ef499dcd2e654f1ef4a7.png) 0 -891px;
+    background-size: 24px 1081px;
+}
+
+.path-icon {
+    background: no-repeat url(//maps.gstatic.com/tactile/icons/settings_hdpi-ac98c51ad910ef499dcd2e654f1ef4a7.png) 0 -400px;
+    background-size: 24px 1081px;
+}
+
+.mountain-icon {
+    background: no-repeat url(//maps.gstatic.com/tactile/icons/settings_hdpi-ac98c51ad910ef499dcd2e654f1ef4a7.png) 0 -600px;
+    background-size: 24px 1081px;
+}
